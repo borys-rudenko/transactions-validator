@@ -1,0 +1,82 @@
+{
+	"info": {
+		"_postman_id": "e7c5d34e-43d4-4bf9-9cc5-aeed33ed11b7",
+		"name": "SurePay Transaction Validation API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29182486"
+	},
+	"item": [
+		{
+			"name": "Validate Transactions (Upload JSON)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/path/to/your/testfile.csv"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/transactions/validate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"transactions",
+						"validate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validate Transactions (Upload CSV)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/path/to/your/testfile.csv"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/transactions/validate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"transactions",
+						"validate"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

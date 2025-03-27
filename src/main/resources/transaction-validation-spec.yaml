@@ -1,0 +1,85 @@
+openapi: 3.0.0
+info:
+  title: Transaction Validation API
+  description: API for validating bank transaction records from CSV or JSON files.
+  version: 1.0.5
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+
+paths:
+  /transactions/validate:
+    post:
+      summary: Validate bank transactions
+      description: Upload a CSV or JSON file containing bank transactions. Returns only failed transactions.
+      operationId: validateTransactions
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The CSV or JSON file containing transaction records.
+      responses:
+        "200":
+          description: List of invalid transactions.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TransactionRecord"
+        "400":
+          description: Invalid file format or parsing error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    TransactionRecord:
+      type: object
+      properties:
+        reference:
+          type: integer
+          format: int64
+          description: Unique transaction reference number.
+        accountNumber:
+          type: string
+          description: IBAN of the account.
+        startBalance:
+          type: number
+          description: Initial balance before transaction.
+        mutation:
+          type: number
+          description: Transaction amount (positive or negative).
+        description:
+          type: string
+          description: Original description with appended error reason if validation fails.
+        endBalance:
+          type: number
+          description: Final balance after transaction.
+
+    ErrorResponse:
+      type: object
+      description: Standard error response
+      properties:
+        message:
+          type: string
+          description: Human-readable error message
+        error:
+          type: string
+          description: Error type or reason
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code
+
+tags:
+  - name: Transactions
+    description: Endpoints related to transaction validation.
