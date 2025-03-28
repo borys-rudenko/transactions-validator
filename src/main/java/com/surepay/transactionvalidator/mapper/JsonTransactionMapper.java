@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.util.List;
 
-@Component
+//@Component
 public class JsonTransactionMapper implements TransactionFileParser {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();

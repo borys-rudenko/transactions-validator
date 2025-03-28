@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+//@Component
 public class CsvTransactionMapper implements TransactionFileParser {
 
     public List<TransactionRecord> parse(MultipartFile file) throws Exception {

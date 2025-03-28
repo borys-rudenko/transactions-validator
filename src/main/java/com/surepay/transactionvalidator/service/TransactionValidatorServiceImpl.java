@@ -24,18 +24,26 @@ public class TransactionValidatorServiceImpl implements TransactionValidatorServ
             boolean isDuplicateReference = !uniqueReferences.add(record.getReference());
             boolean isEndBalanceIncorrect = !isEndBalanceValid(record);
 
-            if (isDuplicateReference || isEndBalanceIncorrect) {
-                String reason = String.join(" ",
-                        isDuplicateReference ? "[ERROR: Duplicate transaction reference]" : "",
-                        isEndBalanceIncorrect ? "[ERROR: Incorrect end balance, expected "
-                                + record.getStartBalance().add(record.getMutation()) + "]" : ""
-                ).trim();
+            StringBuilder reason = new StringBuilder();
+            if (isDuplicateReference) {
+                reason.append("[ERROR: Duplicate transaction reference] ");
+            }
+            if (isEndBalanceIncorrect) {
+                reason.append("[ERROR: Incorrect end balance, expected ")
+                        .append(record.getStartBalance().add(record.getMutation()))
+                        .append("] ");
+            }
+
+            if (!reason.isEmpty()) {
+                String reasonText = reason.toString().trim();
 
                 log.error("Invalid transaction detected: reference={}, account={}, reason={}",
-                        record.getReference(), record.getAccountNumber(), reason
+                        record.getReference(), record.getAccountNumber(), reasonText);
+
+                record.setDescription(
+                        Optional.ofNullable(record.getDescription()).orElse("") + " " + reasonText
                 );
 
-                record.setDescription(Optional.ofNullable(record.getDescription()).orElse("") + " " + reason);
                 invalidRecords.add(record);
             }
         }

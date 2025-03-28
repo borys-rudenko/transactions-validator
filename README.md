@@ -5,7 +5,46 @@ This Spring Boot application validates bank transaction records (CSV or JSON), c
 - ✅ Duplicate transaction references
 - ✅ Incorrect end balance calculations
 
+
 ---
+✅ Explanation: How Large File Support Was Implemented
+
+🧠 Requirement:
+Support parsing and validating large files (e.g., hundreds of MBs to 1GB) without running out of memory.
+✅ Solution
+
+1. Streaming File Reading via BufferedReader
+   You used BufferedReader with InputStreamReader, which reads the file line by line from the input stream, instead of loading the whole file into memory.
+
+`BufferedReader reader = new BufferedReader(
+new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8)
+);`
+✅ This ensures minimal memory usage regardless of file size.
+
+2. Streaming CSV Parsing with Apache Commons CSV
+   You used CSVParser, which parses the file as an iterator over records, not as a full list:
+
+`CSVParser csvParser = new CSVParser(reader, format);
+for (CSVRecord csvRecord : csvParser) {
+// parsing each record one-by-one
+}`
+✅ Each record is read and processed individually — keeping memory footprint low.
+
+3. In-Loop Validation / Processing Recommendation
+   I added a comment (or plan to implement) that:
+
+Records should be validated inside the loop
+`**Only the necessary records should be collected
+// 💡 To avoid OutOfMemoryError for large files:
+//    Consider validating each record inside this loop and collecting only those that are needed.**`
+
+✅ This allows:
+
+Real-time filtering
+Early rejection of invalid records
+Avoiding storing millions of valid ones if not needed
+---
+
 
 ## 📆 Features
 
